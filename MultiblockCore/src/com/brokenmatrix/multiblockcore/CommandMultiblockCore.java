@@ -1,4 +1,4 @@
-package com.brokenmatrix.mutliblockcore;
+package com.brokenmatrix.multiblockcore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

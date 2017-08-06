@@ -1,4 +1,4 @@
-package com.brokenmatrix.mutliblockcore;
+package com.brokenmatrix.multiblockcore;
 
 import java.util.HashMap;
 import java.util.List;
