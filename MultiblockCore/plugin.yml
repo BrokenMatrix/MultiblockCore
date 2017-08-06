@@ -1,0 +1,23 @@
+main: com.brokenmatrix.multiblockcore.MultiblockCore
+name: MutliblockCore
+version: 0.0.0
+author: zantanj
+description: MultiblockCore is an extention to ModCore that allows easy creation to mutliblock devices in plugin-mods.
+
+depend: [ModCore]
+
+commands:
+  multiblockcore:
+    description: The basic MultiblockCore command.
+    aliases: mbc
+    useage: /mbc <arguments>
+permissions:
+  multiblockcore.dismantle:
+    description: Lets you do /mbc dismantle.
+    defualt: op
+  mutliblockcore.dismantleall:
+    description: Lets you do /mbc dismantle all.
+    defualt: op
+  multiblockcore.view:
+    description: Lets you do /mbc view.
+    defualt: true
