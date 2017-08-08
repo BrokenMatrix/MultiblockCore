@@ -17,6 +17,6 @@ public class MBCCustomBlock implements IMultiblockComponent
 	@Override
 	public boolean isComplete(int[] loc, World world)
 	{
-		return block.getID() == DataStorage.getBlock(world.getBlockAt(loc[0], loc[1], loc[2]).getLocation());
+		return block.getID() == DataStorage.GetBlock(world.getBlockAt(loc[0], loc[1], loc[2]).getLocation());
 	}
 }
