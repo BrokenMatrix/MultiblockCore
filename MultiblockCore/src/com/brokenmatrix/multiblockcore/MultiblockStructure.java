@@ -17,7 +17,10 @@ public class MultiblockStructure
 		this.type = type;
 	}
 	
-	public void onInteract(Player p) {}
+	public void onInteract(Player player)
+	{
+		type.onInteract(player, centre, rotation);
+	}
 	
 	public List<Location> getLocations()
 	{

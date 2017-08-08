@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import net.minecraft.server.v1_12_R1.MathHelper;
 
@@ -42,6 +43,8 @@ public class MultiblockConfiguration
 		return centre;
 	}
 	
+	public void onInteract(Player player, Location centre, int rotation) {}
+	
 	public List<Location> getLocations(Location loc, int rotation)
 	{
 		World world = loc.getWorld();
@@ -57,8 +60,7 @@ public class MultiblockConfiguration
 			pos[2] = Integer.parseInt(parts[2]);
 			
 			float rotr = (float) Math.toRadians(rotation);
-			pos[0] = Math.round((pos[0] * MathHelper.cos(rotr)) - (pos[2] * MathHelper.sin(rotr)));
-			pos[2] = Math.round((pos[2] * MathHelper.cos(rotr)) + (pos[0] * MathHelper.sin(rotr)));
+			rotate(pos, rotr);
 			
 			pos[0] += loc.getBlockX();
 			pos[1] += loc.getBlockY();
@@ -77,22 +79,22 @@ public class MultiblockConfiguration
 			return false;
 		}
 		
-		if (check(loc.getWorld(), quickChecks, 0))
+		if (check(loc.getWorld(), loc, quickChecks, 0))
 		{
 			return true;
 		}
 		
-		if (check(loc.getWorld(), quickChecks, 90))
+		if (check(loc.getWorld(), loc, quickChecks, 90))
 		{
 			return true;
 		}
 		
-		if (check(loc.getWorld(), quickChecks, 180))
+		if (check(loc.getWorld(), loc, quickChecks, 180))
 		{
 			return true;
 		}
 		
-		if (check(loc.getWorld(), quickChecks, 270))
+		if (check(loc.getWorld(), loc, quickChecks, 270))
 		{
 			return true;
 		}
@@ -107,22 +109,22 @@ public class MultiblockConfiguration
 			return -1;
 		}
 		
-		if (check(loc.getWorld(), components, 0))
+		if (check(loc.getWorld(), loc, components, 0))
 		{
 			return 0;
 		}
 		
-		if (check(loc.getWorld(), components, 90))
+		if (check(loc.getWorld(), loc, components, 90))
 		{
 			return 90;
 		}
 		
-		if (check(loc.getWorld(), components, 180))
+		if (check(loc.getWorld(), loc, components, 180))
 		{
 			return 180;
 		}
 		
-		if (check(loc.getWorld(), components, 270))
+		if (check(loc.getWorld(), loc, components, 270))
 		{
 			return 270;
 		}
@@ -169,27 +171,32 @@ public class MultiblockConfiguration
 		return this;
 	}
 	
-	private boolean check(World world, HashMap<String, IMultiblockComponent> components, float rotd)
+	private boolean check(World world, Location centre, HashMap<String, IMultiblockComponent> components, float rotd)
 	{
 		for (Entry<String, IMultiblockComponent> component : components.entrySet())
 		{
 			String[] parts = component.getKey().split(" ");
 			int[] loc = new int[parts.length];
 			
-			loc[0] = Integer.parseInt(parts[0]);
-			loc[1] = Integer.parseInt(parts[1]);
-			loc[2] = Integer.parseInt(parts[2]);
+			loc[0] = Integer.parseInt(parts[0]) + centre.getBlockX();
+			loc[1] = Integer.parseInt(parts[1]) + centre.getBlockY();
+			loc[2] = Integer.parseInt(parts[2]) + centre.getBlockZ();
 			
 			float rotr = (float) Math.toRadians(rotd);
-			loc[0] = Math.round((loc[0] * MathHelper.cos(rotr)) - (loc[2] * MathHelper.sin(rotr)));
-			loc[2] = Math.round((loc[2] * MathHelper.cos(rotr)) + (loc[0] * MathHelper.sin(rotr)));
+			rotate(loc, rotr);
 			
-			if (!component.getValue().isComplete(loc, world))
+			if (MultiblockDataStorage.GetStructure(world.getBlockAt(loc[0], loc[1], loc[2]).getLocation()) != null || !component.getValue().isComplete(loc, world))
 			{
 				return false;
 			}
 		}
 		
 		return true;
+	}
+	
+	private void rotate(int[] pos, float rotr)
+	{
+		pos[0] = Math.round((pos[0] * MathHelper.cos(rotr)) - (pos[2] * MathHelper.sin(rotr)));
+		pos[2] = Math.round((pos[2] * MathHelper.cos(rotr)) + (pos[0] * MathHelper.sin(rotr)));
 	}
 }
