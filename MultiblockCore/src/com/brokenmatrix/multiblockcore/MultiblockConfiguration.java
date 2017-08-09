@@ -138,21 +138,6 @@ public class MultiblockConfiguration
 		
 		return this;
 	}
-
-	public MultiblockConfiguration addComponent4(String sloc, IMultiblockComponent component)
-	{
-		String[] parts = sloc.split(" ");
-		int[] loc = new int[parts.length];
-		for (int i = 0; i < parts.length; i++)
-			loc[i] = Integer.parseInt(parts[i]);
-		
-		components.put(loc[0] + " " + loc[1] + " " + loc[2], component);
-		components.put(-loc[0] + " " + loc[1] + " " + -loc[2], component);
-		components.put(loc[2] + " " + loc[1] + " " + loc[2], component);
-		components.put(-loc[2] + " " + loc[1] + " " + -loc[2], component);
-		
-		return this;
-	}
 	
 	public MultiblockConfiguration finish()
 	{
