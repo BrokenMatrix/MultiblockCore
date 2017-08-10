@@ -1,6 +1,6 @@
 main: com.brokenmatrix.multiblockcore.MultiblockCore
 name: MultiblockCore
-version: 0.0.1
+version: 0.0.4
 author: zantanj
 description: MultiblockCore is an extention to ModCore that allows easy creation to mutliblock devices in plugin-mods.
 

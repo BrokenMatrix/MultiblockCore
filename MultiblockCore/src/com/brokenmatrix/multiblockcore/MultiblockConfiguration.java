@@ -10,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.brokenmatrix.modcore.tools.DataStorage;
+
 import net.minecraft.server.v1_12_R1.MathHelper;
 
 public class MultiblockConfiguration
@@ -17,11 +19,13 @@ public class MultiblockConfiguration
 	private HashMap<String, IMultiblockComponent> components;
 	private HashMap<String, IMultiblockComponent> quickChecks;
 	private Material centre;
+	private int centerCustomId;
 	private String ID;
 	
-	public MultiblockConfiguration(String ID, Material centre)
+	public MultiblockConfiguration(String ID, Material centre, int centerCustomId)
 	{
 		this.ID = ID;
+		this.centerCustomId = centerCustomId;
 		
 		if (!centre.isBlock())
 		{
@@ -31,6 +35,11 @@ public class MultiblockConfiguration
 		
 		components = new HashMap<String, IMultiblockComponent>();
 		quickChecks = new HashMap<String, IMultiblockComponent>();
+	}
+	
+	public MultiblockConfiguration(String ID, Material centre)
+	{
+		this(ID, centre, -1);
 	}
 	
 	public String getID()
@@ -79,6 +88,14 @@ public class MultiblockConfiguration
 			return false;
 		}
 		
+		if (centerCustomId > 0)
+		{
+			if (DataStorage.GetBlock(loc) != centerCustomId)
+			{
+				return false;
+			}
+		}
+		
 		if (check(loc.getWorld(), loc, quickChecks, 0))
 		{
 			return true;
@@ -104,11 +121,6 @@ public class MultiblockConfiguration
 	
 	public int fits(Location loc)
 	{
-		if (loc.getBlock().getType() != centre)
-		{
-			return -1;
-		}
-		
 		if (check(loc.getWorld(), loc, components, 0))
 		{
 			return 0;
@@ -135,6 +147,24 @@ public class MultiblockConfiguration
 	public MultiblockConfiguration addComponent(String loc, IMultiblockComponent component)
 	{
 		components.put(loc, component);
+		
+		return this;
+	}
+
+	public MultiblockConfiguration addComponent4(String sloc, IMultiblockComponent component)
+	{
+		String[] parts = sloc.split(" ");
+		int[] loc = new int[parts.length];
+		for (int i = 0; i < parts.length; i++)
+			loc[i] = Integer.parseInt(parts[i]);
+		
+		components.put(loc[0] + " " + loc[1] + " " + loc[2], component);
+		rotate(loc, 90f);
+		components.put(loc[0] + " " + loc[1] + " " + loc[2], component);
+		rotate(loc, 90f);
+		components.put(loc[2] + " " + loc[1] + " " + loc[2], component);
+		rotate(loc, 90f);
+		components.put(loc[2] + " " + loc[1] + " " + loc[2], component);
 		
 		return this;
 	}
