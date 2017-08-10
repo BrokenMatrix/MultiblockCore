@@ -14,6 +14,7 @@ public final class MultiblockConfigurations
 	static
 	{
 		Configs = new ArrayList<MultiblockConfiguration>();
+		ValidCentres = new ArrayList<Material>();
 	}
 	
 	public static void Register(MultiblockConfiguration config)

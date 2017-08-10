@@ -26,25 +26,31 @@ public class EventListener implements Listener
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e)
 	{
+		System.out.println("INTERACT");
 		if (!e.isCancelled() && e.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
+			System.out.println("SUCESS");
 			Location loc = e.getClickedBlock().getLocation();
 			MultiblockStructure structure = MultiblockDataStorage.GetStructure(loc);
 			
 			if (structure == null)
 			{
+				System.out.println("NO STRUCTURE");
 				structure = MultiblockConfigurations.GetStructure(loc);
 				
 				if (structure == null)
 				{
+					System.out.println("NON VALID STRUCTURE");
 					return;
 				}
 				
+				System.out.println("VALID STRUCTURE");
 				MultiblockDataStorage.Store(structure);
 			}
 			
 			if (structure.getCentre() == loc)
 			{
+				System.out.println("INTERACT");
 				structure.onInteract(e.getPlayer());
 			}
 		}

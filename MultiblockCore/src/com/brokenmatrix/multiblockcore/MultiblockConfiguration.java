@@ -27,12 +27,6 @@ public class MultiblockConfiguration
 		this.ID = ID;
 		this.centerCustomId = centerCustomId;
 		
-		if (!centre.isBlock())
-		{
-			System.err.println("Multiblock configuration " + ID + " attempted to initlize with a non block core!");
-			return;
-		}
-		
 		components = new HashMap<String, IMultiblockComponent>();
 		quickChecks = new HashMap<String, IMultiblockComponent>();
 	}
@@ -83,12 +77,13 @@ public class MultiblockConfiguration
 	
 	public boolean isCanidate(Location loc)
 	{
+		System.out.println(loc.getBlock().getType() + " " + centre);
 		if (loc.getBlock().getType() != centre)
 		{
 			return false;
 		}
 		
-		if (centerCustomId > 0)
+		if (centerCustomId > -1)
 		{
 			if (DataStorage.GetBlock(loc) != centerCustomId)
 			{
