@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class EventListener implements Listener
@@ -24,33 +25,41 @@ public class EventListener implements Listener
 	}
 	
 	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent e)
+	{
+		if (!e.isCancelled())
+		{
+			MultiblockStructure structure = MultiblockDataStorage.GetStructure(e.getBlockPlaced().getLocation());
+			
+			if (structure != null)
+			{
+				e.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e)
 	{
-		System.out.println("INTERACT");
 		if (!e.isCancelled() && e.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
-			System.out.println("SUCESS");
 			Location loc = e.getClickedBlock().getLocation();
 			MultiblockStructure structure = MultiblockDataStorage.GetStructure(loc);
 			
 			if (structure == null)
 			{
-				System.out.println("NO STRUCTURE");
 				structure = MultiblockConfigurations.GetStructure(loc);
 				
 				if (structure == null)
 				{
-					System.out.println("NON VALID STRUCTURE");
 					return;
 				}
 				
-				System.out.println("VALID STRUCTURE");
 				MultiblockDataStorage.Store(structure);
 			}
 			
-			if (structure.getCentre() == loc)
+			if (structure.getCentre().equals(loc))
 			{
-				System.out.println("INTERACT");
 				structure.onInteract(e.getPlayer());
 			}
 		}

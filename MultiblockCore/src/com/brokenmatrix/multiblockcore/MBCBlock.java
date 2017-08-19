@@ -5,7 +5,7 @@ import org.bukkit.World;
 
 public class MBCBlock implements IMultiblockComponent
 {
-	private Material block;
+	public Material block;
 	
 	public MBCBlock(Material block)
 	{
@@ -13,6 +13,8 @@ public class MBCBlock implements IMultiblockComponent
 		{
 			System.err.println("A MBC block attempted to initilize with a non block material!");
 		}
+		
+		this.block = block;
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package com.brokenmatrix.multiblockcore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.brokenmatrix.modcore.EventListener;
 import com.brokenmatrix.modcore.ModCore;
 
 public class MultiblockCore extends JavaPlugin

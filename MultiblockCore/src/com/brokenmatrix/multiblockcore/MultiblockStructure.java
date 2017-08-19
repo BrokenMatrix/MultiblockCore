@@ -15,6 +15,7 @@ public class MultiblockStructure
 	{
 		this.centre = centre;
 		this.type = type;
+		this.rotation = rotation;
 	}
 	
 	public void onInteract(Player player)

@@ -3,6 +3,7 @@ package com.brokenmatrix.multiblockcore;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public final class MultiblockDataStorage
@@ -25,6 +26,7 @@ public final class MultiblockDataStorage
 		
 		for (Location location : locations)
 		{
+			Bukkit.getPlayer("zantanj").sendMessage(locations + "");
 			Multiblocks.put(location, structure);
 		}
 	}

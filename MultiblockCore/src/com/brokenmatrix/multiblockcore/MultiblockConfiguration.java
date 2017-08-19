@@ -24,8 +24,15 @@ public class MultiblockConfiguration
 	
 	public MultiblockConfiguration(String ID, Material centre, int centerCustomId)
 	{
+		if (!centre.isBlock())
+		{
+			System.out.println("Multiblock " + ID + " tried to initilize with a non block material core!");
+			return;
+		}
+		
 		this.ID = ID;
 		this.centerCustomId = centerCustomId;
+		this.centre = centre;
 		
 		components = new HashMap<String, IMultiblockComponent>();
 		quickChecks = new HashMap<String, IMultiblockComponent>();
@@ -62,8 +69,7 @@ public class MultiblockConfiguration
 			pos[1] = Integer.parseInt(parts[1]);
 			pos[2] = Integer.parseInt(parts[2]);
 			
-			float rotr = (float) Math.toRadians(rotation);
-			rotate(pos, rotr);
+			rotate(pos, rotation);
 			
 			pos[0] += loc.getBlockX();
 			pos[1] += loc.getBlockY();
@@ -72,12 +78,13 @@ public class MultiblockConfiguration
 			locations.add(world.getBlockAt(pos[0], pos[1], pos[2]).getLocation());
 		}
 		
+		locations.add(loc);
+		
 		return locations;
 	}
 	
 	public boolean isCanidate(Location loc)
 	{
-		System.out.println(loc.getBlock().getType() + " " + centre);
 		if (loc.getBlock().getType() != centre)
 		{
 			return false;
@@ -145,6 +152,13 @@ public class MultiblockConfiguration
 		
 		return this;
 	}
+	
+	public MultiblockConfiguration addCheck(String loc, IMultiblockComponent component)
+	{
+		quickChecks.put(loc, component);
+		
+		return this;
+	}
 
 	public MultiblockConfiguration addComponent4(String sloc, IMultiblockComponent component)
 	{
@@ -181,19 +195,22 @@ public class MultiblockConfiguration
 		return this;
 	}
 	
-	private boolean check(World world, Location centre, HashMap<String, IMultiblockComponent> components, float rotd)
+	private boolean check(World world, Location centre, HashMap<String, IMultiblockComponent> components, int rotation)
 	{
 		for (Entry<String, IMultiblockComponent> component : components.entrySet())
 		{
 			String[] parts = component.getKey().split(" ");
 			int[] loc = new int[parts.length];
 			
-			loc[0] = Integer.parseInt(parts[0]) + centre.getBlockX();
-			loc[1] = Integer.parseInt(parts[1]) + centre.getBlockY();
-			loc[2] = Integer.parseInt(parts[2]) + centre.getBlockZ();
+			loc[0] = Integer.parseInt(parts[0]);
+			loc[1] = Integer.parseInt(parts[1]);
+			loc[2] = Integer.parseInt(parts[2]);
 			
-			float rotr = (float) Math.toRadians(rotd);
-			rotate(loc, rotr);
+			rotate(loc, rotation);
+			
+			loc[0] += centre.getBlockX();
+			loc[1] += centre.getBlockY();
+			loc[2] += centre.getBlockZ();
 			
 			if (MultiblockDataStorage.GetStructure(world.getBlockAt(loc[0], loc[1], loc[2]).getLocation()) != null || !component.getValue().isComplete(loc, world))
 			{
@@ -204,9 +221,16 @@ public class MultiblockConfiguration
 		return true;
 	}
 	
-	private void rotate(int[] pos, float rotr)
+	private void rotate(int[] pos, float rot)
 	{
-		pos[0] = Math.round((pos[0] * MathHelper.cos(rotr)) - (pos[2] * MathHelper.sin(rotr)));
-		pos[2] = Math.round((pos[2] * MathHelper.cos(rotr)) + (pos[0] * MathHelper.sin(rotr)));
+		float rotr = (float) Math.toRadians(rot);
+		
+		int[] npos =  new int[]{
+				Math.round((pos[0] * MathHelper.cos(rotr)) - (pos[2] * MathHelper.sin(rotr))),
+				Math.round((pos[2] * MathHelper.cos(rotr)) + (pos[0] * MathHelper.sin(rotr)))
+		};
+		
+		pos[0] = npos[0];
+		pos[2] = npos[1];		
 	}
 }
